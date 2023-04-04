@@ -81,7 +81,7 @@
             closeButton.TabIndex = 0;
             closeButton.Text = "Close";
             closeButton.UseVisualStyleBackColor = true;
-            closeButton.Click += button1_Click;
+            closeButton.Click += closeButton_Click;
             // 
             // ScreenShot
             // 
