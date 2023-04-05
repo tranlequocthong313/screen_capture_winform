@@ -150,7 +150,6 @@
             StartPosition = FormStartPosition.Manual;
             Text = "Notification";
             TopMost = true;
-            Load += Notification_Load;
             Click += Notification_Click;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

@@ -107,7 +107,6 @@
             Text = "ScreenShot";
             TopMost = true;
             WindowState = FormWindowState.Maximized;
-            Load += ScreenShot_Load;
             Paint += ScreenShot_Paint;
             MouseDown += ScreenShot_MouseDown;
             MouseMove += ScreenShot_MouseMove;

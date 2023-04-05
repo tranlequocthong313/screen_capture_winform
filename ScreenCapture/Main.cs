@@ -8,11 +8,15 @@ namespace ScreenCapture
     public partial class Main : Form
     {
         private const string IMAGE_FILTERS = "jpeg|*.jpeg;|png|*.png;|gif|*.gif;";
+        private const int FORM_WIDTH_AFTER_TAKING = 1200;
+        private const int FORM_HEIGHT_AFTER_TAKING = 800;
+        private const int MODIFIER_KEY = Constants.MOD_WIN + Constants.MOD_SHIFT;
+        private const Keys KEY = Keys.Z;
 
-        private readonly ImageFormat[] imageFormats;
-        private readonly Size formSizeAfterTaking;
-        private readonly GlobalHotkey globalHotkey;
+        private readonly ImageFormat[] imageFormats = { ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif };
+        private readonly Size formSizeAfterTaking = new(FORM_WIDTH_AFTER_TAKING, FORM_HEIGHT_AFTER_TAKING);
         private readonly Notification notification;
+        private readonly GlobalHotkey globalHotkey;
 
         private bool isExitingAppFromTrayIcon;
 
@@ -20,17 +24,9 @@ namespace ScreenCapture
         {
             InitializeComponent();
 
-            imageFormats = new ImageFormat[3];
-            imageFormats[0] = ImageFormat.Jpeg;
-            imageFormats[1] = ImageFormat.Png;
-            imageFormats[2] = ImageFormat.Gif;
-
-            formSizeAfterTaking = new Size(1200, 800);
-
-            globalHotkey = new GlobalHotkey(Constants.MOD_WIN + Constants.MOD_SHIFT, Keys.Z, this);
+            notification = new(() => Show());
+            globalHotkey = new GlobalHotkey(MODIFIER_KEY, KEY, this);
             globalHotkey.Register();
-
-            notification = new Notification();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -39,7 +35,6 @@ namespace ScreenCapture
             isExitingAppFromTrayIcon = false;
 
             ScreenShot.OnTakeScreenShot += TakeScreenShot;
-            Notification.OnClickNotification += () => Show();
         }
 
         protected override void WndProc(ref Message m)

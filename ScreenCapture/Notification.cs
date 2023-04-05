@@ -10,21 +10,17 @@ using System.Windows.Forms;
 
 namespace ScreenCapture
 {
-    public delegate void OnClickNotification();
-
     public partial class Notification : Form
     {
-        public static event OnClickNotification? OnClickNotification;
+        private readonly Action onClickAction;
 
-        public Notification()
+        public Notification(Action onClickAction)
         {
             InitializeComponent();
-        }
 
-        private void Notification_Load(object sender, EventArgs e)
-        {
-            timer1.Interval = 5000;
+            this.onClickAction = onClickAction;
             Location = new Point(Screen.PrimaryScreen.Bounds.Width - Size.Width - 20, Screen.PrimaryScreen.Bounds.Height - Size.Height - 20);
+            timer1.Interval = 5000;
         }
 
         public void ShowNotification(Bitmap bitmap)
@@ -45,7 +41,7 @@ namespace ScreenCapture
 
         private void Notification_Click(object sender, EventArgs e)
         {
-            OnClickNotification?.Invoke();
+            onClickAction();
             timer1.Stop();
             Hide();
         }

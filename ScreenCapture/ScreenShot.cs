@@ -21,9 +21,9 @@ namespace ScreenCapture
 
         internal static event OnTakeScreenShot? OnTakeScreenShot;
 
-        private readonly Bitmap canvas;
+        private readonly Bitmap canvas = new(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, PixelFormat.Format32bppRgb);
         private readonly Graphics artist;
-        private readonly SolidBrush brush;
+        private readonly SolidBrush brush = new(Color.FromArgb(128, 255, 255, 255));
 
         private Rectangle rectangle;
         private Point oldMousePoint;
@@ -33,12 +33,9 @@ namespace ScreenCapture
         {
             InitializeComponent();
 
-            canvas = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, PixelFormat.Format32bppRgb);
             artist = Graphics.FromImage(canvas);
-
             rectangle = new Rectangle();
             oldMousePoint = new Point();
-            brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255));
             Opacity = 0.6;
         }
 
@@ -56,8 +53,8 @@ namespace ScreenCapture
         {
             Hide();
             SendKeys.Send(WINDOWS_SCREENSHOT_KEY_NAME);
-            Thread.Sleep(SHOT_EFFECT_MILLISECONDS);
-            OnTakeScreenShot?.Invoke((Bitmap)Clipboard.GetImage()); 
+            Task.Delay(SHOT_EFFECT_MILLISECONDS).Wait();
+            OnTakeScreenShot?.Invoke((Bitmap)Clipboard.GetImage());
         }
 
         private void ScreenShot_Paint(object sender, PaintEventArgs e)
@@ -89,8 +86,9 @@ namespace ScreenCapture
             artist.CopyFromScreen(rectangle.Location, rectangle.Location, rectangle.Size, CopyPixelOperation.SourceCopy);
 
             var bitmap = canvas.Clone(rectangle, canvas.PixelFormat);
+
             Clipboard.SetImage(bitmap);
-            Thread.Sleep(SHOT_EFFECT_MILLISECONDS);
+            Task.Delay(SHOT_EFFECT_MILLISECONDS).Wait();
             OnTakeScreenShot?.Invoke(bitmap);
         }
 
