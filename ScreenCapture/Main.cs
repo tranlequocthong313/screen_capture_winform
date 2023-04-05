@@ -15,6 +15,7 @@ namespace ScreenCapture
 
         private readonly ImageFormat[] imageFormats = { ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif };
         private readonly Size formSizeAfterTaking = new(FORM_WIDTH_AFTER_TAKING, FORM_HEIGHT_AFTER_TAKING);
+        private ScreenShot screenShotForm = new();
         private readonly Notification notification;
         private readonly GlobalHotkey globalHotkey;
 
@@ -39,6 +40,8 @@ namespace ScreenCapture
 
         protected override void WndProc(ref Message m)
         {
+            if (screenShotForm.Visible) return;
+
             if (m.Msg == Constants.WM_HOTKEY_MSG_ID)
             {
                 OpenScreenShotForm();
@@ -54,7 +57,6 @@ namespace ScreenCapture
         private void OpenScreenShotForm()
         {
             Hide();
-            var screenShotForm = new ScreenShot();
             screenShotForm.ShowDialog();
         }
 

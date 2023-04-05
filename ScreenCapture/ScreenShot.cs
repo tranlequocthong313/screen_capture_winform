@@ -90,6 +90,12 @@ namespace ScreenCapture
             Clipboard.SetImage(bitmap);
             Task.Delay(SHOT_EFFECT_MILLISECONDS).Wait();
             OnTakeScreenShot?.Invoke(bitmap);
+
+            artist.Clear(BackColor);
+            rectangle.Width = 0;
+            rectangle.Height = 0;
+            oldMousePoint.X = 0;
+            oldMousePoint.Y = 0;
         }
 
         private void DrawRectangle(Point location)
