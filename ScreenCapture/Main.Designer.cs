@@ -35,14 +35,11 @@
             screenShotPictureBox = new PictureBox();
             panel1 = new Panel();
             saveButton = new Button();
-            menuStrip1 = new MenuStrip();
-            fileToolStripMenuItem = new ToolStripMenuItem();
             notifyIcon1 = new NotifyIcon(components);
             contextMenuStrip1 = new ContextMenuStrip(components);
             exitToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)screenShotPictureBox).BeginInit();
             panel1.SuspendLayout();
-            menuStrip1.SuspendLayout();
             contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -69,11 +66,11 @@
             guideLabel.Anchor = AnchorStyles.None;
             guideLabel.AutoSize = true;
             guideLabel.ForeColor = Color.Black;
-            guideLabel.Location = new Point(184, 155);
+            guideLabel.Location = new Point(136, 158);
             guideLabel.Name = "guideLabel";
-            guideLabel.Size = new Size(376, 28);
+            guideLabel.Size = new Size(472, 28);
             guideLabel.TabIndex = 1;
-            guideLabel.Text = "Press Control + Shift + Z to start a snip.";
+            guideLabel.Text = "Press Windows logo key+ Shift + Z to start a snip.";
             guideLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // screenShotPictureBox
@@ -115,25 +112,6 @@
             saveButton.UseVisualStyleBackColor = false;
             saveButton.Click += saveScreenShotButton_Click;
             // 
-            // menuStrip1
-            // 
-            menuStrip1.ImageScalingSize = new Size(24, 24);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(730, 33);
-            menuStrip1.TabIndex = 4;
-            menuStrip1.Text = "menuStrip1";
-            menuStrip1.Visible = false;
-            // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Z;
-            fileToolStripMenuItem.Size = new Size(51, 29);
-            fileToolStripMenuItem.Text = "file";
-            fileToolStripMenuItem.Click += fileToolStripMenuItem_Click;
-            // 
             // notifyIcon1
             // 
             notifyIcon1.ContextMenuStrip = contextMenuStrip1;
@@ -165,19 +143,15 @@
             Controls.Add(panel1);
             Controls.Add(screenShotPictureBox);
             Controls.Add(guideLabel);
-            Controls.Add(menuStrip1);
             Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point);
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MainMenuStrip = menuStrip1;
             Name = "Main";
-            Text = "Snipping Tool";
+            Text = "Screen Capture";
             FormClosing += Main_FormClosing;
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)screenShotPictureBox).EndInit();
             panel1.ResumeLayout(false);
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
             contextMenuStrip1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -188,8 +162,6 @@
         private Label guideLabel;
         private PictureBox screenShotPictureBox;
         private Panel panel1;
-        private MenuStrip menuStrip1;
-        private ToolStripMenuItem fileToolStripMenuItem;
         private NotifyIcon notifyIcon1;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem exitToolStripMenuItem;

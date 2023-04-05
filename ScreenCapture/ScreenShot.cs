@@ -12,13 +12,14 @@ using System.Windows.Forms;
 
 namespace ScreenCapture
 {
-    public delegate void TakeFullScreenShot();
-    public delegate void TakeClippedScreenShot(Bitmap bitmap);
+    public delegate void OnTakeScreenShot(Bitmap bitmap);
 
     public partial class ScreenShot : Form
     {
-        internal static event TakeFullScreenShot OnTakeScreenShot;
-        internal static event TakeClippedScreenShot OnTakeClippedScreenShot;
+        private const string WINDOWS_SCREENSHOT_KEY_NAME = "{PRTSC}";
+        private const int SHOT_EFFECT_MILLISECONDS = 1000;
+
+        internal static event OnTakeScreenShot? OnTakeScreenShot;
 
         private readonly Bitmap canvas;
         private readonly Graphics artist;
@@ -38,12 +39,11 @@ namespace ScreenCapture
             rectangle = new Rectangle();
             oldMousePoint = new Point();
             brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255));
-            Opacity = 0.5;
+            Opacity = 0.6;
         }
 
         private void ScreenShot_Load(object sender, EventArgs e)
         {
-            Location = new Point((Screen.PrimaryScreen.Bounds.Width / 2) - (popUpControlsPanel.Width / 2), 20);
             isOnMouseDown = false;
         }
 
@@ -55,7 +55,9 @@ namespace ScreenCapture
         private void takeScreenShotButton_Click(object sender, EventArgs e)
         {
             Hide();
-            OnTakeScreenShot?.Invoke();
+            SendKeys.Send(WINDOWS_SCREENSHOT_KEY_NAME);
+            Thread.Sleep(SHOT_EFFECT_MILLISECONDS);
+            OnTakeScreenShot?.Invoke((Bitmap)Clipboard.GetImage()); 
         }
 
         private void ScreenShot_Paint(object sender, PaintEventArgs e)
@@ -84,8 +86,12 @@ namespace ScreenCapture
             if (rectangle.Width == 0 || rectangle.Height == 0) return;
 
             Hide();
-            artist.CopyFromScreen(oldMousePoint, oldMousePoint, rectangle.Size, CopyPixelOperation.SourceCopy);
-            OnTakeClippedScreenShot?.Invoke(canvas.Clone(rectangle, canvas.PixelFormat));
+            artist.CopyFromScreen(rectangle.Location, rectangle.Location, rectangle.Size, CopyPixelOperation.SourceCopy);
+
+            var bitmap = canvas.Clone(rectangle, canvas.PixelFormat);
+            Clipboard.SetImage(bitmap);
+            Thread.Sleep(SHOT_EFFECT_MILLISECONDS);
+            OnTakeScreenShot?.Invoke(bitmap);
         }
 
         private void DrawRectangle(Point location)

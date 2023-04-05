@@ -7,12 +7,12 @@ namespace ScreenCapture
 {
     public partial class Main : Form
     {
-        private const string WINDOWS_SCREENSHOT_KEY_NAME = "{PRTSC}";
         private const string IMAGE_FILTERS = "jpeg|*.jpeg;|png|*.png;|gif|*.gif;";
-        private const int SHOT_EFFECT_MILLISECONDS = 1000;
 
         private readonly ImageFormat[] imageFormats;
         private readonly Size formSizeAfterTaking;
+        private readonly GlobalHotkey globalHotkey;
+        private readonly Notification notification;
 
         private bool isExitingAppFromTrayIcon;
 
@@ -24,7 +24,13 @@ namespace ScreenCapture
             imageFormats[0] = ImageFormat.Jpeg;
             imageFormats[1] = ImageFormat.Png;
             imageFormats[2] = ImageFormat.Gif;
+
             formSizeAfterTaking = new Size(1200, 800);
+
+            globalHotkey = new GlobalHotkey(Constants.MOD_WIN + Constants.MOD_SHIFT, Keys.Z, this);
+            globalHotkey.Register();
+
+            notification = new Notification();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -32,8 +38,17 @@ namespace ScreenCapture
             saveButton.Visible = false;
             isExitingAppFromTrayIcon = false;
 
-            ScreenShot.OnTakeScreenShot += TakeFullScreenShot;
-            ScreenShot.OnTakeClippedScreenShot += TakeClippedScreenShot;
+            ScreenShot.OnTakeScreenShot += TakeScreenShot;
+            Notification.OnClickNotification += () => Show();
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == Constants.WM_HOTKEY_MSG_ID)
+            {
+                OpenScreenShotForm();
+            }
+            base.WndProc(ref m);
         }
 
         private void newButton_Click(object sender, EventArgs e)
@@ -46,36 +61,19 @@ namespace ScreenCapture
             Hide();
             var screenShotForm = new ScreenShot();
             screenShotForm.ShowDialog();
-            Show();
         }
 
-        private void TakeFullScreenShot()
-        {
-            SendKeys.Send(WINDOWS_SCREENSHOT_KEY_NAME);
-            Thread.Sleep(SHOT_EFFECT_MILLISECONDS);
-
-            screenShotPictureBox.Image = Clipboard.GetImage();
-            AdjustAfterTakingScreenShot();
-        }
-
-        private void TakeClippedScreenShot(Bitmap bitmap)
+        private void TakeScreenShot(Bitmap bitmap)
         {
             screenShotPictureBox.Image = bitmap;
-            Clipboard.SetImage(bitmap);
-            Thread.Sleep(SHOT_EFFECT_MILLISECONDS);
-
-            AdjustAfterTakingScreenShot();
-        }
-
-        private void AdjustAfterTakingScreenShot()
-        {
             screenShotPictureBox.Visible = true;
             screenShotPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
             Size = formSizeAfterTaking;
             saveButton.Visible = true;
             guideLabel.Visible = false;
-        }
 
+            notification.ShowNotification(bitmap);
+        }
 
         private void saveScreenShotButton_Click(object sender, EventArgs e)
         {
@@ -116,6 +114,10 @@ namespace ScreenCapture
                 e.Cancel = true;
                 WindowState = FormWindowState.Minimized;
                 Hide();
+            }
+            else
+            {
+                globalHotkey.Unregister();
             }
         }
     }

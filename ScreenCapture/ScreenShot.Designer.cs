@@ -37,7 +37,7 @@
             // popUpControlsPanel
             // 
             popUpControlsPanel.Anchor = AnchorStyles.Top;
-            popUpControlsPanel.BackColor = Color.FromArgb(231, 151, 66);
+            popUpControlsPanel.BackColor = Color.Transparent;
             popUpControlsPanel.Controls.Add(takeScreenShotButton);
             popUpControlsPanel.Controls.Add(closeButton);
             popUpControlsPanel.Location = new Point(288, 12);
@@ -48,6 +48,7 @@
             // takeScreenShotButton
             // 
             takeScreenShotButton.Anchor = AnchorStyles.None;
+            takeScreenShotButton.BackColor = Color.FromArgb(231, 151, 66);
             takeScreenShotButton.BackgroundImageLayout = ImageLayout.None;
             takeScreenShotButton.Cursor = Cursors.Hand;
             takeScreenShotButton.FlatAppearance.BorderSize = 0;
@@ -61,12 +62,13 @@
             takeScreenShotButton.Size = new Size(161, 53);
             takeScreenShotButton.TabIndex = 1;
             takeScreenShotButton.Text = "Fullscreen";
-            takeScreenShotButton.UseVisualStyleBackColor = true;
+            takeScreenShotButton.UseVisualStyleBackColor = false;
             takeScreenShotButton.Click += takeScreenShotButton_Click;
             // 
             // closeButton
             // 
             closeButton.Anchor = AnchorStyles.None;
+            closeButton.BackColor = Color.FromArgb(231, 151, 66);
             closeButton.BackgroundImageLayout = ImageLayout.Zoom;
             closeButton.Cursor = Cursors.Hand;
             closeButton.FlatAppearance.BorderSize = 0;
@@ -80,7 +82,7 @@
             closeButton.Size = new Size(161, 53);
             closeButton.TabIndex = 0;
             closeButton.Text = "Close";
-            closeButton.UseVisualStyleBackColor = true;
+            closeButton.UseVisualStyleBackColor = false;
             closeButton.Click += closeButton_Click;
             // 
             // ScreenShot
