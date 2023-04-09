@@ -17,7 +17,6 @@ namespace ScreenCapture
     public partial class ScreenShot : Form
     {
         private const string WINDOWS_SCREENSHOT_KEY_NAME = "{PRTSC}";
-        private const int SHOT_EFFECT_MILLISECONDS = 1000;
 
         internal static event OnTakeScreenShot? OnTakeScreenShot;
 
@@ -52,9 +51,13 @@ namespace ScreenCapture
         private void takeScreenShotButton_Click(object sender, EventArgs e)
         {
             Hide();
-            SendKeys.Send(WINDOWS_SCREENSHOT_KEY_NAME);
-            Task.Delay(SHOT_EFFECT_MILLISECONDS).Wait();
-            OnTakeScreenShot?.Invoke((Bitmap)Clipboard.GetImage());
+            OnTakeScreenShot?.Invoke(CaputreFullScreen());
+        }
+
+        public Bitmap CaputreFullScreen()
+        {
+            SendKeys.SendWait(WINDOWS_SCREENSHOT_KEY_NAME);
+            return (Bitmap)Clipboard.GetImage();
         }
 
         private void ScreenShot_Paint(object sender, PaintEventArgs e)
@@ -78,24 +81,36 @@ namespace ScreenCapture
 
         private void ScreenShot_MouseUp(object sender, MouseEventArgs e)
         {
-            isOnMouseDown = false;
+            try
+            {
+                isOnMouseDown = false;
+                OnTakeScreenShot?.Invoke(CaptureByCropping(rectangle));
 
-            if (rectangle.Width == 0 || rectangle.Height == 0) return;
+                artist.Clear(BackColor);
+                rectangle.Width = 0;
+                rectangle.Height = 0;
+                oldMousePoint.X = 0;
+                oldMousePoint.Y = 0;
+            }
+            catch (ArgumentException)
+            {
+                return;
+            }
+        }
+
+        public Bitmap CaptureByCropping(Rectangle rectangle)
+        {
+            if (rectangle.Width == 0 || rectangle.Height == 0)
+            {
+                throw new ArgumentException("Rectangle size must be greater than 0!");
+            }
 
             Hide();
             artist.CopyFromScreen(rectangle.Location, rectangle.Location, rectangle.Size, CopyPixelOperation.SourceCopy);
-
             var bitmap = canvas.Clone(rectangle, canvas.PixelFormat);
-
             Clipboard.SetImage(bitmap);
-            Task.Delay(SHOT_EFFECT_MILLISECONDS).Wait();
-            OnTakeScreenShot?.Invoke(bitmap);
 
-            artist.Clear(BackColor);
-            rectangle.Width = 0;
-            rectangle.Height = 0;
-            oldMousePoint.X = 0;
-            oldMousePoint.Y = 0;
+            return bitmap;
         }
 
         private void DrawRectangle(Point location)

@@ -76,9 +76,9 @@
             // screenShotPictureBox
             // 
             screenShotPictureBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            screenShotPictureBox.Location = new Point(44, 88);
+            screenShotPictureBox.Location = new Point(34, 88);
             screenShotPictureBox.Name = "screenShotPictureBox";
-            screenShotPictureBox.Size = new Size(639, 189);
+            screenShotPictureBox.Size = new Size(662, 189);
             screenShotPictureBox.TabIndex = 2;
             screenShotPictureBox.TabStop = false;
             screenShotPictureBox.Visible = false;

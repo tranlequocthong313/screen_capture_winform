@@ -15,8 +15,8 @@ namespace ScreenCapture
 
         private readonly ImageFormat[] imageFormats = { ImageFormat.Jpeg, ImageFormat.Png, ImageFormat.Gif };
         private readonly Size formSizeAfterTaking = new(FORM_WIDTH_AFTER_TAKING, FORM_HEIGHT_AFTER_TAKING);
-        private ScreenShot screenShotForm = new();
-        private readonly Notification notification;
+        private readonly ScreenShot screenShotForm = new();
+        public readonly Notification notification;
         private readonly GlobalHotkey globalHotkey;
 
         private bool isExitingAppFromTrayIcon;
@@ -54,13 +54,13 @@ namespace ScreenCapture
             OpenScreenShotForm();
         }
 
-        private void OpenScreenShotForm()
+        public void OpenScreenShotForm()
         {
             Hide();
             screenShotForm.ShowDialog();
         }
 
-        private void TakeScreenShot(Bitmap bitmap)
+        public void TakeScreenShot(Bitmap bitmap)
         {
             screenShotPictureBox.Image = bitmap;
             screenShotPictureBox.Visible = true;
@@ -80,9 +80,14 @@ namespace ScreenCapture
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    screenShotPictureBox.Image.Save(saveFileDialog.FileName, imageFormats[saveFileDialog.FilterIndex - 1]);
+                    SaveImage(saveFileDialog.FileName, imageFormats[saveFileDialog.FilterIndex - 1]);
                 }
             }
+        }
+
+        public void SaveImage(string fileName, ImageFormat imageFormat)
+        {
+            screenShotPictureBox.Image.Save(fileName, imageFormat);
         }
 
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
